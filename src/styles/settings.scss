@@ -1,0 +1,15 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+// @use 'vuetify/settings' with (
+//   $color-pack: false
+// );
+
+$primary: #1e88e5;
+$secondary: #42a5f5;
+$success: #4caf50;
+$error: #f44336;
