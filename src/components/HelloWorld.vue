@@ -3,8 +3,8 @@
     <div>
       <v-img
         class="mb-4"
-        height="150"
-        src="@/assets/logo.png"
+        height="200"
+        src="@/assets/IPD-Buddy.png"
       />
 
       <div class="mb-8 text-center">
