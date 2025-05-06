@@ -24,14 +24,21 @@
   </v-container>
 </template>
 
+<script setup lang="ts">
+  const redirectToCognito = () => {
+    const clientId = '4eb6ni1ndmiavn52qf00itpeal'
+    const domain = 'us-east-1cx6hm6gdc.auth.us-east-1.amazoncognito.com'
+    const redirectUri = 'https://d84l1y8p4kdic.cloudfront.net'
+    const responseType = 'code'
+
+    const cognitoUrl = `${domain}/login?client_id=${clientId}&response_type=${responseType}&scope=email+openid+phone&redirect_uri=${redirectUri}`
+    console.log(cognitoUrl)
+    window.location.href = 'https://us-east-1cx6hm6gdc.auth.us-east-1.amazoncognito.com/login?client_id=4eb6ni1ndmiavn52qf00itpeal&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fd84l1y8p4kdic.cloudfront.net'
+  }
+</script>
+
 <style scoped>
 .v-container {
   background-color: #121212; /* charcoal dark */
 }
 </style>
-
-  <script setup lang="ts">
-  const redirectToCognito = () => {
-    window.location.href = 'https://ipd-buddy.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=12345678901234567890&redirect_uri=https://ipd-buddy.com/login'
-  }
-</script>
