@@ -21,7 +21,7 @@
     }
 
     try{
-      //? Sending code to Spring Boot server for a token exchange
+      //? Sending code to the Spring Boot server for a token exchange
       const response = await fetch('http://localhost:8080/oauth2/exchange-code', {
         method: 'POST',
         headers: {

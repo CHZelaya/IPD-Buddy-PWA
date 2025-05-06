@@ -32,8 +32,8 @@
     const responseType = 'code'
 
     const cognitoUrl = `${domain}/login?client_id=${clientId}&response_type=${responseType}&scope=email+openid+phone&redirect_uri=${redirectUri}`
-
-    window.location.href = cognitoUrl
+    console.log(cognitoUrl)
+    window.location.href = 'https://us-east-1cx6hm6gdc.auth.us-east-1.amazoncognito.com/login?client_id=4eb6ni1ndmiavn52qf00itpeal&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fd84l1y8p4kdic.cloudfront.net'
   }
 </script>
 
