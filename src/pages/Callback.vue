@@ -22,7 +22,7 @@
 
     try{
       //? Sending code to the Spring Boot server for a token exchange
-      const response = await fetch('http://localhost:8080/oauth2/exchange-code', {
+      const response = await fetch('http://localhost:8080/api/v1/auth/exchange-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,12 @@
       }
 
       const data = await response.json()
-      localStorage.setItem('token', data.token)
+      console.log('✅ Tokens received from backend:', data)
+      localStorage.setItem('access_token', data.access_token)
+      localStorage.setItem('refresh_token', data.refresh_token)
+      localStorage.setItem('id_token', data.id_token)
+
+      router.push('/dashboard')
 
     } catch (error) {
       console.error(error)
