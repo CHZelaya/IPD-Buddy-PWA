@@ -7,6 +7,7 @@ export function generatePdfForSubmission (details: any, summary: any) {
   doc.setFontSize(18)
   doc.text('KH Contracting - Work Submission Record', 14, 20)
 
+
   doc.setFontSize(12)
   doc.text(`Date: ${details.job.date}`, 14, 30)
   doc.text(`Contractor: ${details.contractor.firstName} ${details.contractor.lastName}`, 14, 40)
