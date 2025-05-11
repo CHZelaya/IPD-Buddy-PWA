@@ -17,7 +17,7 @@ export async function submitJobToBackend () {
   }
 
   try{
-    const response = await axios.post('https://ipdbuddy-backend.herokuapp.com/api/v1/jobs/submit', payload)
+    const response = await axios.post('https://ipdbuddy-backend-91d5cec4f8a8.herokuapp.com/api/v1/jobs/submit', payload)
 
     console.log('Job submitted to backend:', response.data);
 
