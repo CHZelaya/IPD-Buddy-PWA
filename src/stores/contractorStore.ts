@@ -24,7 +24,7 @@ export const useContractorStore = defineStore('contractor', {
   }),
   actions: {
     async fetchProfile (){
-      const response = await fetch('http://localhost:8080/api/v1/contractor/me', { credentials: 'include' });
+      const response = await fetch('https://ipdbuddy-backend-91d5cec4f8a8.herokuapp.com/api/v1/contractor/me', { credentials: 'include' });
       if (response.ok) {
         const data: ContractorProfile = await response.json();
         this.profile = data;
