@@ -24,14 +24,24 @@ export const useContractorStore = defineStore('contractor', {
   }),
   actions: {
     async fetchProfile (){
+      const token = localStorage.getItem('jwt');
       const url = 'https://ipdbuddy-backend-91d5cec4f8a8.herokuapp.com/api/v1/contractor/me'
-      const response = await fetch(url, { credentials: 'include' });
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+
       if (response.ok) {
         const data: ContractorProfile = await response.json();
         this.profile = data;
       } else {
-        console.error('Failed to fetch contractor profile')
+        console.error('Failed to fetch contractor profile');
       }
+
     },
   },
 });
