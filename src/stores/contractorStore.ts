@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 export interface ContractorProfile {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,6 +13,7 @@ export interface ContractorProfile {
 export const useContractorStore = defineStore('contractor', {
   state: (): { profile: ContractorProfile } => ({
     profile: {
+      id: 0,
       firstName: '',
       lastName: '',
       email: '',
