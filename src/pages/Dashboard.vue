@@ -55,7 +55,15 @@
   const contractorStore = useContractorStore();
 
   onMounted(() => {
-    contractorStore.fetchProfile();
+    const token = localStorage.getItem('id_token')
+    if (!token) {
+      // Optionally redirect or show login button
+      console.warn('User not logged in, skipping profile fetch')
+      return
+    }
+
+    // Proceed with API call
+    contractorStore.fetchProfile()
   });
 
 
