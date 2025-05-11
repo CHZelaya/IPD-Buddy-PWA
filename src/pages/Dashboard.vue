@@ -11,7 +11,7 @@
     <!-- Recent Activity Section -->
     <v-sheet class="pa-4 mb-4" color="surface" width="100%">
       <h2 class="text-h5 mb-2">Recent Activity</h2>
-      <p>Last Job: Skyview Basement - May 5, 2025</p>
+      <p>🚧🚜🔧 Under Construction 🚧🚜🔧</p>
     </v-sheet>
 
     <!-- Primary Actions -->

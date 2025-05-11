@@ -27,7 +27,7 @@
 <script setup lang="ts">
 
   const redirectToCognito = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/cognito'
+    window.location.href = 'https://ipdbuddy-backend.herokuapp.com/login/oauth2/code/cognito'
   }
 </script>
 
