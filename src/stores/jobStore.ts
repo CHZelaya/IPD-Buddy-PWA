@@ -40,6 +40,8 @@ export const useJobStore = defineStore('job', {
 
     submittedJob: null as JobSubmissionPayload | null,
   }),
+
+
   actions: {
     syncBillablesFromComponentStore (billableArray: BillableItem[]) {
       billableArray.forEach((item: BillableItem) => {
@@ -70,7 +72,6 @@ export const useJobStore = defineStore('job', {
 
     async submitJob () {
       const billables = this.prepareBillables();
-      //! Debugging
       console.log('Prepared Billables:', billables);
 
       const payload: JobSubmissionPayload = {
@@ -78,18 +79,24 @@ export const useJobStore = defineStore('job', {
         date: this.date,
         notes: this.notes,
         billables,
-      }
+      };
 
       console.log(`Submitting job with data:`, payload);
 
       try {
-        const result = await submitJobToApi(payload) //back end call
-        this.submittedJob = payload // Store locally for next page
-        return result
+        const result = await submitJobToApi(payload); // Backend call
+        console.log('Job submitted successfully', result);
+        this.submittedJob = result; //  Store server's processed response (includes totals, IDs, etc.)
+        return result;
+
       } catch (error) {
-        console.error('Failed to submit job', error)
-        throw error
+        console.error('Failed to submit job', error);
+
+        //  Store user's input so summary still works
+        this.submittedJob = payload;
+        return payload; // Return it so downstream can still proceed
       }
     },
+
   },
 })

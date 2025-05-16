@@ -11,7 +11,7 @@ export async function submitJobToApi (payload: JobSubmissionPayload) {
 
   try {
     const response = await axios.post(
-      'https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/job/submit',
+      'https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/job/submit'/*'http://localhost:8080/api/v1/job/submit'*/,
       payload,
       {
         headers: {
