@@ -1,13 +1,12 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-
+import { BILLABLE_RATES } from '@/utils/BillableRates'
 
 export function generatePdfForSubmission (details: any, summary: any) {
   const doc = new jsPDF()
 
   doc.setFontSize(18)
   doc.text('KH Contracting - Work Submission Record', 14, 20)
-
 
   doc.setFontSize(12)
   doc.text(`Date: ${details.job.date}`, 14, 30)
@@ -17,12 +16,17 @@ export function generatePdfForSubmission (details: any, summary: any) {
   autoTable(doc, {
     startY: 60,
     head: [['Item', 'Qty', 'Rate', 'Total']],
-    body: details.billableItemsSummary.map((item: any) => [
-      item.type,
-      item.quantity.toString(),
-      `$${item.rate.toFixed(2)}`,
-      `$${item.total.toFixed(2)}`,
-    ]),
+    body: details.billableItemsSummary.map((item: any) => {
+      const rateInfo = BILLABLE_RATES[item.type] || { rate: 0, description: 'Unknown Item' }
+      const rate = rateInfo.rate
+      const total = rate * item.quantity
+      return [
+        item.type,
+        item.quantity.toString(),
+        `$${rate.toFixed(2)}`,
+        `$${total.toFixed(2)}`,
+      ]
+    }),
   })
 
   const summaryStartY = (doc as any).lastAutoTable.finalY + 10
@@ -31,7 +35,6 @@ export function generatePdfForSubmission (details: any, summary: any) {
 
   doc.save(`submission-${details.job.date}.pdf`)
 }
-
 
 export function generatePdfForPersonalRecord (details: any, summary: any) {
   const doc = new jsPDF()
@@ -48,12 +51,17 @@ export function generatePdfForPersonalRecord (details: any, summary: any) {
   autoTable(doc, {
     startY: 70,
     head: [['Item', 'Qty', 'Rate', 'Total']],
-    body: details.billableItemsSummary.map((item: any) => [
-      item.type,
-      item.quantity.toString(),
-      `$${item.rate.toFixed(2)}`,
-      `$${item.total.toFixed(2)}`,
-    ]),
+    body: details.billableItemsSummary.map((item: any) => {
+      const rateInfo = BILLABLE_RATES[item.type] || { rate: 0, description: 'Unknown Item' }
+      const rate = rateInfo.rate
+      const total = rate * item.quantity
+      return [
+        item.type,
+        item.quantity.toString(),
+        `$${rate.toFixed(2)}`,
+        `$${total.toFixed(2)}`,
+      ]
+    }),
   })
 
   const summaryStartY = (doc as any).lastAutoTable.finalY + 10

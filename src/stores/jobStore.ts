@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
+import type { JobSubmissionResponseDTO } from '@/types/JobSubmissionResponseDTO'
+
 import { submitJobToApi } from '@/services/apiService.ts';
 // import type { Ref } from 'vue';
 import type { BillableItem } from '@/types/BillableItems.ts';
@@ -38,7 +40,7 @@ export const useJobStore = defineStore('job', {
       FIRE_TAPING_SECOND_MECH_ROOM: false,
     } as Record<string, number | boolean>,
 
-    submittedJob: null as JobSubmissionPayload | null,
+    submittedJob: null as JobSubmissionPayload | JobSubmissionResponseDTO | null,
   }),
 
 
