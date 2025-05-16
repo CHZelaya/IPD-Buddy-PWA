@@ -55,23 +55,7 @@
   const contractorStore = useContractorStore();
 
   onMounted(() => {
-    // Grab token from URL if present
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromUrl = urlParams.get('token');
 
-    if (tokenFromUrl) {
-      localStorage.setItem('jwt', tokenFromUrl);
-      console.log('JWT stored from URL:', tokenFromUrl);
-    }
-
-    const token = localStorage.getItem('jwt');
-
-    if (!token) {
-      console.warn('User not logged in, skipping profile fetch');
-      return;
-    }
-
-    // Proceed with API call
     contractorStore.fetchProfile();
   });
 

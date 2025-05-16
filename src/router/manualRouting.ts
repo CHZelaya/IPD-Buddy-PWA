@@ -9,6 +9,7 @@ import NewJob from '@/pages/NewJob.vue';
 import PastJobs from '@/pages/PastJobs.vue';
 import Profile from '@/pages/Profile.vue';
 import Dashboard from '@/pages/Dashboard.vue';
+import SummaryPage from '@/pages/SummaryPage.vue';
 
 const routes = [
   {
@@ -30,6 +31,8 @@ const routes = [
       { path: 'pastJobs', name: 'past-jobs', component: PastJobs },
       { path: 'profile', name: 'profile', component: Profile },
       { path: 'dashboard', name: 'dashboard', component: Dashboard },
+      { path: 'job/success', name: 'success', component: SummaryPage },
+      { path: '**', redirect: '/' },
     ],
   },
 ];

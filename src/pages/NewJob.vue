@@ -2,8 +2,10 @@
   import { ref } from 'vue'
   import type { Ref } from 'vue'
   import { useJobStore } from '@/stores/jobStore';
+  import { useRouter } from 'vue-router';
 
   const jobStore = useJobStore();
+  const router = useRouter();
   const notes = ref('')
 
 
@@ -52,6 +54,18 @@
   const today = new Date().toISOString().split('T')[0];
   const jobDate = ref<string>(today);
 
+  function prepareBillables () {
+    return billableItems.value.map(item => {
+
+      const rawValue = isRef(item.model) ? item.model.value : item.model
+
+      return {
+        billableType: item.id,
+        quantity: /*item.type === 'toggle' ? Number(rawValue) : rawValue,*/ Number(rawValue),
+      }
+    })
+  }
+
 
   //Job submission
   function submitJob () {
@@ -62,28 +76,23 @@
     }
 
     console.log('Submitting Job')
-    //Grabbing the address and the date
-    jobStore.address = address.value;
-    jobStore.date = jobDate.value
-    jobStore.notes= notes.value;
 
-    type BillableKey = keyof typeof jobStore.billables
-    // Grabbing all the billable items values
-    billableItems.value.forEach(item => {
-      const labelKey = item.id as BillableKey
-      const model = isRef(item.model) ? item.model : ref(item.model)
-      const modelValue = model.value
+    const payload = {
+      address:address.value,
+      date: jobDate.value,
+      notes: notes.value,
+      billables: prepareBillables(),
+    }
 
-      if (item.type === 'quantity' && typeof modelValue === 'number') {
-        (jobStore.billables[labelKey] as number) = modelValue
-      } else if (item.type === 'toggle' && typeof modelValue === 'boolean') {
-        (jobStore.billables[labelKey] as boolean) = modelValue
-      } else {
-        console.warn(`Type mismatch on key: ${labelKey}`)
-      }
+    console.log('Submitting job with data:', payload)
+    jobStore.submitJob(payload)
+      .then(() => {
+        router.push('/job/success')
+      })
+      .catch(error => {
+        console.error('Failed to submit job:', error)
+      })
 
-    })
-    jobStore.submitJob()
 
   }
 

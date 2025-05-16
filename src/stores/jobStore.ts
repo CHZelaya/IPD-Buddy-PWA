@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia';
+import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
+import { submitJobToApi } from '@/services/apiService.ts';
+
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -24,11 +27,21 @@ export const useJobStore = defineStore('job', {
       FIRE_TAPING_MECH_ROOM_CEILING: false,
       FIRE_TAPING_SECOND_MECH_ROOM: false,
     },
+
+    submittedJob: null as JobSubmissionPayload | null,
   }),
   actions: {
-    submitJob () {
-      console.log(`Submitting job with data:`, this.$state);
-      // Handling logic for submission later
+    async submitJob (payload: JobSubmissionPayload) {
+      console.log(`Submitting job with data:`, payload);
+
+      try {
+        const result = await submitJobToApi(payload) //back end call
+        this.submittedJob = payload // Store locally for next page
+        return result
+      } catch (error) {
+        console.error('Failed to submit job', error)
+        throw error
+      }
     },
   },
 })

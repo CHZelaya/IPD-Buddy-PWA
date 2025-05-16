@@ -4,6 +4,7 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+
 // Plugins
 import { registerPlugins } from '@/plugins'
 import { createPinia } from 'pinia';
@@ -11,6 +12,7 @@ import piniaPluginPersistedState from 'pinia-plugin-persistedstate';
 
 // Components
 import App from './App.vue'
+import '@/services/firebase-init.ts'
 
 // Composables
 import { createApp } from 'vue'

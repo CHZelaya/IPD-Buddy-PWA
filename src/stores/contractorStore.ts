@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+
 export interface ContractorProfile {
   id: number;
   firstName: string;
@@ -24,8 +25,9 @@ export const useContractorStore = defineStore('contractor', {
   }),
   actions: {
     async fetchProfile (){
+      console.log('Base URL:', import.meta.env.VITE_API_LIVE_URL);
       const token = localStorage.getItem('jwt');
-      const url = 'https://ipdbuddy-backend-91d5cec4f8a8.herokuapp.com/api/v1/contractor/me'
+      const url = `${import.meta.env.VITE_API_LIVE_URL}/contractor/me`
       const response = await fetch(url, {
         method: 'GET',
         headers: {
