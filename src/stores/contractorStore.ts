@@ -17,9 +17,9 @@ export const useContractorStore = defineStore('contractor', {
   }),
   actions: {
     async fetchProfile (currentEmail: string){
-      console.log('Base URL:', import.meta.env.VITE_API_LIVE_URL);
+      console.log('Base URL:', `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1`);
       const token = localStorage.getItem('jwt');
-      const url = `${import.meta.env.VITE_API_LIVE_URL}/contractor/me`
+      const url = `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/contractor/me`
       try{
         const response = await fetch(url, {
           method: 'GET',
