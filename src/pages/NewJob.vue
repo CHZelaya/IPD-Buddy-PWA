@@ -1,21 +1,22 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import type { Ref } from 'vue'
+  // import type { Ref } from 'vue'
   import { useJobStore } from '@/stores/jobStore';
   import { useRouter } from 'vue-router';
+  import type { BillableItem } from '@/types/BillableItems.ts';
 
   const jobStore = useJobStore();
   const router = useRouter();
 
-
-  interface BillableItem {
-    id: string;
-    label: string;
-    description?: string;
-    model: Ref<number | boolean>;
-    type: 'quantity' | 'toggle';
-    max?: number;
-  }
+  //
+  // interface BillableItem {
+  //   id: string;
+  //   label: string;
+  //   description?: string;
+  //   model: number | boolean;
+  //   type: 'quantity' | 'toggle';
+  //   max?: number;
+  // }
 
 
   const address = computed({
@@ -85,7 +86,7 @@
     // }
 
     console.log('Submitting job`s billables')
-    jobStore.syncBillablesFromComponentStore(billableItems.value)
+    jobStore.syncBillablesFromComponentStore(billableItems.value as BillableItem[])
     jobStore.submitJob()
       .then(() => {
         router.push('/job/success')

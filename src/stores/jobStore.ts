@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
 import { submitJobToApi } from '@/services/apiService.ts';
-import type { Ref } from 'vue';
+// import type { Ref } from 'vue';
+import type { BillableItem } from '@/types/BillableItems.ts';
 
-interface BillableItem {
-  id: string;
-  label: string;
-  description?: string;
-  model: Ref<number | boolean>;
-  type: 'quantity' | 'toggle';
-  max?: number;
-}
+// interface BillableItem {
+//   id: string;
+//   label: string;
+//   description?: string;
+//   model: Ref<number | boolean>;
+//   type: 'quantity' | 'toggle';
+//   max?: number;
+// }
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -40,9 +41,10 @@ export const useJobStore = defineStore('job', {
     submittedJob: null as JobSubmissionPayload | null,
   }),
   actions: {
-    syncBillablesFromComponentStore (billableArray: BillableItem[]){
+    syncBillablesFromComponentStore (billableArray: BillableItem[]) {
       billableArray.forEach((item: BillableItem) => {
-        this.billables[item.id] = item.model.value
+        // Defensive write
+        this.billables[item.id] = item.model ?? (item.type === 'toggle' ? false : 0)
       })
     },
 
@@ -50,7 +52,7 @@ export const useJobStore = defineStore('job', {
     prepareBillables () {
       return Object.entries(this.billables).map(([key, value]) => ({
         billableType: key,
-        quantity: Number(value),
+        quantity: typeof value === 'boolean' ? (value ? 1 : 0) : Number(value),
       }))
     },
 
