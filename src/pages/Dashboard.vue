@@ -3,6 +3,14 @@
     <!-- Full-width Profile Section -->
     <v-sheet class="pa-4 mb-4" color="surface" width="100%">
       <h1 class="text-h4 mb-2">Welcome back, {{ contractorStore.profile.firstName }}!</h1>
+      <v-alert
+        v-if="contractorStore.profile.id === -1"
+        class="mb-4"
+        type="warning"
+        variant="tonal"
+      >
+        ⚠️ Showing fallback profile due to server error. Live data may be unavailable.
+      </v-alert>
       <p>📱: {{ contractorStore.profile.phoneNumber }}</p>
       <p>📧: {{ contractorStore.profile.email }}</p>
       <p>🗓️: {{ today }}</p>
@@ -45,7 +53,16 @@
   import { useContractorStore } from '@/stores/contractorStore';
   import { useRouter } from 'vue-router';
   const router = useRouter();
+  import { getAuth } from 'firebase/auth';
+
   const activeTab = ref('dashboard');
+
+  function getCurrentUserEmail () {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    return user?.email || '';
+  }
+
 
   function navigateTo (tab: string) {
     if (tab === 'newJob') router.push('/newJob');
@@ -55,8 +72,8 @@
   const contractorStore = useContractorStore();
 
   onMounted(() => {
-
-    contractorStore.fetchProfile();
+    const email = getCurrentUserEmail();
+    contractorStore.fetchProfile(email);
   });
 
 

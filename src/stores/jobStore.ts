@@ -43,25 +43,41 @@ export const useJobStore = defineStore('job', {
   actions: {
     syncBillablesFromComponentStore (billableArray: BillableItem[]) {
       billableArray.forEach((item: BillableItem) => {
-        // Defensive write
-        this.billables[item.id] = item.model ?? (item.type === 'toggle' ? false : 0)
-      })
+        const rawValue = unref(item.model);
+
+        if (item.type === 'toggle') {
+          this.billables[item.id] = Boolean(rawValue);
+        } else {
+          const parsed = Number(rawValue);
+          this.billables[item.id] = isNaN(parsed) ? 0 : parsed;
+        }
+      });
+
+      console.log('Synced billables:', this.billables);
     },
 
 
     prepareBillables () {
-      return Object.entries(this.billables).map(([key, value]) => ({
-        billableType: key,
-        quantity: typeof value === 'boolean' ? (value ? 1 : 0) : Number(value),
-      }))
+      return Object.entries(this.billables).map(([key, value]) => {
+        if (typeof value === 'boolean'){
+          return { billableType: key, quantity: value ? 1 : 0 };
+        } else {
+          const parsed = Number(value);
+          return { billableType: key, quantity: isNaN(parsed)? 0 : parsed };
+        }
+      })
     },
 
     async submitJob () {
+      const billables = this.prepareBillables();
+      //! Debugging
+      console.log('Prepared Billables:', billables);
+
       const payload: JobSubmissionPayload = {
         address: this.address,
         date: this.date,
         notes: this.notes,
-        billables: this.prepareBillables(),
+        billables,
       }
 
       console.log(`Submitting job with data:`, payload);
