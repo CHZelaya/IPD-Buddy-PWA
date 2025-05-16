@@ -1,7 +1,16 @@
 import { defineStore } from 'pinia';
 import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
 import { submitJobToApi } from '@/services/apiService.ts';
+import type { Ref } from 'vue';
 
+interface BillableItem {
+  id: string;
+  label: string;
+  description?: string;
+  model: Ref<number | boolean>;
+  type: 'quantity' | 'toggle';
+  max?: number;
+}
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -26,12 +35,33 @@ export const useJobStore = defineStore('job', {
       SECOND_MECH_ROOM: false,
       FIRE_TAPING_MECH_ROOM_CEILING: false,
       FIRE_TAPING_SECOND_MECH_ROOM: false,
-    },
+    } as Record<string, number | boolean>,
 
     submittedJob: null as JobSubmissionPayload | null,
   }),
   actions: {
-    async submitJob (payload: JobSubmissionPayload) {
+    syncBillablesFromComponentStore (billableArray: BillableItem[]){
+      billableArray.forEach((item: BillableItem) => {
+        this.billables[item.id] = item.model.value
+      })
+    },
+
+
+    prepareBillables () {
+      return Object.entries(this.billables).map(([key, value]) => ({
+        billableType: key,
+        quantity: Number(value),
+      }))
+    },
+
+    async submitJob () {
+      const payload: JobSubmissionPayload = {
+        address: this.address,
+        date: this.date,
+        notes: this.notes,
+        billables: this.prepareBillables(),
+      }
+
       console.log(`Submitting job with data:`, payload);
 
       try {

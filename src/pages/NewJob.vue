@@ -6,7 +6,6 @@
 
   const jobStore = useJobStore();
   const router = useRouter();
-  const notes = ref('')
 
 
   interface BillableItem {
@@ -18,7 +17,26 @@
     max?: number;
   }
 
-  const address = ref('')
+
+  const address = computed({
+    get: () => jobStore.address,
+    set: (value: string) => jobStore.address = value,
+  })
+
+  const notes = computed({
+    get: () => jobStore.notes,
+    set: (value: string) => jobStore.notes = value,
+  })
+
+  //Date picker
+  const today = new Date().toISOString().split('T')[0];
+  const jobDate = computed({
+    get: () => jobStore.date,
+    set: (value: string) => jobStore.date = value,
+  })
+  //Setting the default date for the job as "today" in case date isnt picked.
+  jobStore.date = today;
+
 
   // Validation rules for Job Address
   const rules = [
@@ -49,24 +67,6 @@
     { id: 'FIRE_TAPING_SECOND_MECH_ROOM', label: 'Fire Taping Second Mech Room', description: '$100.00', model: ref(false), type: 'toggle' },
   ])
 
-
-  //Date picker
-  const today = new Date().toISOString().split('T')[0];
-  const jobDate = ref<string>(today);
-
-  function prepareBillables () {
-    return billableItems.value.map(item => {
-
-      const rawValue = isRef(item.model) ? item.model.value : item.model
-
-      return {
-        billableType: item.id,
-        quantity: /*item.type === 'toggle' ? Number(rawValue) : rawValue,*/ Number(rawValue),
-      }
-    })
-  }
-
-
   //Job submission
   function submitJob () {
     //Blank address check
@@ -77,15 +77,16 @@
 
     console.log('Submitting Job')
 
-    const payload = {
-      address:address.value,
-      date: jobDate.value,
-      notes: notes.value,
-      billables: prepareBillables(),
-    }
+    // const payload = {
+    //   address:address.value,
+    //   date: jobDate.value,
+    //   notes: notes.value,
+    //   billables: prepareBillables(),
+    // }
 
-    console.log('Submitting job with data:', payload)
-    jobStore.submitJob(payload)
+    console.log('Submitting job`s billables')
+    jobStore.syncBillablesFromComponentStore(billableItems.value)
+    jobStore.submitJob()
       .then(() => {
         router.push('/job/success')
       })
@@ -126,7 +127,7 @@
         />
         <v-container>
           <v-row justify="center">
-            <v-date-picker width="400" />
+            <v-date-picker v-model="jobDate" width="400" />
           </v-row>
         </v-container>
       </v-card>
