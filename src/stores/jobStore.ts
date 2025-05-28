@@ -6,14 +6,6 @@ import { submitJobToApi } from '@/services/apiService.ts';
 // import type { Ref } from 'vue';
 import type { BillableItem } from '@/types/BillableItems.ts';
 
-// interface BillableItem {
-//   id: string;
-//   label: string;
-//   description?: string;
-//   model: Ref<number | boolean>;
-//   type: 'quantity' | 'toggle';
-//   max?: number;
-// }
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -40,7 +32,7 @@ export const useJobStore = defineStore('job', {
       FIRE_TAPING_SECOND_MECH_ROOM: false,
     } as Record<string, number | boolean>,
 
-    submittedJob: null as JobSubmissionPayload | JobSubmissionResponseDTO | null,
+    submittedJob: null as JobSubmissionResponseDTO | null,
   }),
 
 
@@ -73,30 +65,30 @@ export const useJobStore = defineStore('job', {
     },
 
     async submitJob () {
-      const billables = this.prepareBillables();
-      console.log('Prepared Billables:', billables);
+      const billableItemsSummary = this.prepareBillables();
 
       const payload: JobSubmissionPayload = {
         address: this.address,
         date: this.date,
         notes: this.notes,
-        billables,
+        billables: billableItemsSummary,
       };
 
-      console.log(`Submitting job with data:`, payload);
 
       try {
         const result = await submitJobToApi(payload); // Backend call
         console.log('Job submitted successfully', result);
         this.submittedJob = result; //  Store server's processed response (includes totals, IDs, etc.)
+        localStorage.setItem('submittedJob', JSON.stringify(result));
         return result;
 
       } catch (error) {
-        console.error('Failed to submit job', error);
 
-        //  Store user's input so summary still works
-        this.submittedJob = payload;
-        return payload; // Return it so downstream can still proceed
+        console.error('Failed to submit job', error)
+        // Clearing any data on an error. This is a temporary fix until I have a better error handling system.
+        localStorage.removeItem('submittedJob');
+        this.submittedJob = null;
+
       }
     },
 

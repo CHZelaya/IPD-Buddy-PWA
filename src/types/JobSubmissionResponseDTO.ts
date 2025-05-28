@@ -15,5 +15,5 @@ export interface JobSubmissionResponseDTO {
   grandTotalAmount: number;
   taxAmount: number;
   savingsAmount: number;
-  message?: string | null;
+  notes?: string | null;
 }

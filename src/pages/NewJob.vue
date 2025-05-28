@@ -8,17 +8,6 @@
   const jobStore = useJobStore();
   const router = useRouter();
 
-  //
-  // interface BillableItem {
-  //   id: string;
-  //   label: string;
-  //   description?: string;
-  //   model: number | boolean;
-  //   type: 'quantity' | 'toggle';
-  //   max?: number;
-  // }
-
-
   const address = computed({
     get: () => jobStore.address,
     set: (value: string) => jobStore.address = value,
