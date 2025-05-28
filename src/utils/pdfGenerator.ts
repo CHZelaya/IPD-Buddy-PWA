@@ -12,6 +12,7 @@ export function generatePdfForSubmission (details: any, summary: any) {
   doc.text(`Date: ${details.job.date}`, 14, 30)
   doc.text(`Contractor: ${details.contractor.firstName} ${details.contractor.lastName}`, 14, 40)
   doc.text(`Job Address: ${details.job.address}`, 14, 50)
+  doc.text(`Notes: ${details.job.notes || 'None'}`, 14, 60)
 
   autoTable(doc, {
     startY: 60,

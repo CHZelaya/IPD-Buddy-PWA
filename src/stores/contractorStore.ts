@@ -20,7 +20,6 @@ export const useContractorStore = defineStore('contractor', {
       console.log('Base URL:', `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1`);
       const token = localStorage.getItem('jwt');
       const url = `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/contractor/me`
-      // const url = `http://localhost:8080/api/v1/contractor/me` //! Dev mode
       try{
         const response = await fetch(url, {
           method: 'GET',
@@ -61,3 +60,5 @@ export const useContractorStore = defineStore('contractor', {
     },
   },
 });
+
+// const url = `http://localhost:8080/api/v1/contractor/me` //! Dev mode
