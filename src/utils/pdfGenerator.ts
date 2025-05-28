@@ -12,7 +12,7 @@ export function generatePdfForSubmission (details: any, summary: any) {
   doc.text(`Date: ${details.job.date}`, 14, 30)
   doc.text(`Contractor: ${details.contractor.firstName} ${details.contractor.lastName}`, 14, 40)
   doc.text(`Job Address: ${details.job.address}`, 14, 50)
-  doc.text(`Notes: ${details.job.notes || 'None'}`, 14, 60)
+
 
   autoTable(doc, {
     startY: 60,
@@ -34,6 +34,10 @@ export function generatePdfForSubmission (details: any, summary: any) {
   doc.text('Summary:', 14, summaryStartY)
   doc.text(`Total Payout: $${summary.grandTotalAmount.toFixed(2)}`, 14, summaryStartY + 10)
 
+  const notes = details.job.notes?.trim() || 'None';
+  const wrappedNotes = doc.splitTextToSize(`Notes: ${notes}`, 180);
+  doc.text(wrappedNotes, 14, summaryStartY + 20);
+
   doc.save(`submission-${details.job.date}.pdf`)
 }
 
@@ -47,7 +51,7 @@ export function generatePdfForPersonalRecord (details: any, summary: any) {
   doc.text(`Date: ${details.job.date}`, 14, 30)
   doc.text(`Contractor: ${details.contractor.firstName} ${details.contractor.lastName}`, 14, 40)
   doc.text(`Job Address: ${details.job.address}`, 14, 50)
-  doc.text(`Notes: ${details.job.notes || 'None'}`, 14, 60)
+
 
   autoTable(doc, {
     startY: 70,
@@ -71,6 +75,10 @@ export function generatePdfForPersonalRecord (details: any, summary: any) {
   doc.text(`Tax Deduction: $${summary.taxAmount.toFixed(2)}`, 14, summaryStartY + 20)
   doc.text(`Savings Deduction: $${summary.savingsAmount.toFixed(2)}`, 14, summaryStartY + 30)
   doc.text(`Net Pay: $${(summary.grandTotalAmount - summary.taxAmount - summary.savingsAmount).toFixed(2)}`, 14, summaryStartY + 40)
+
+  const notes = details.job.notes?.trim() || 'None';
+  const wrappedNotes = doc.splitTextToSize(`Notes: ${notes}`, 180);
+  doc.text(wrappedNotes, 14, summaryStartY + 50);
 
   doc.save(`personal-record-${details.job.date}.pdf`)
 }
