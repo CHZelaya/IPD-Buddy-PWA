@@ -56,12 +56,16 @@ export const useJobStore = defineStore('job', {
     prepareBillables () {
       return Object.entries(this.billables).map(([key, value]) => {
         if (typeof value === 'boolean'){
-          return { billableType: key, quantity: value ? 1 : 0 };
+          // Returns true or null, null values will be filtered out
+          return value ? { billableType: key, quantity: 1 } : null;
         } else {
           const parsed = Number(value);
-          return { billableType: key, quantity: isNaN(parsed)? 0 : parsed };
+          // Returns the parsed number or null, null values will be filtered out
+          return parsed > 0 ? { billableType: key, quantity: parsed } : null;
         }
       })
+        // Filtering out the null values
+        .filter(item => item !== null);
     },
 
     async submitJob () {
