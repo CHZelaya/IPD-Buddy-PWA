@@ -5,10 +5,18 @@
   import { BILLABLE_RATES } from '@/utils/BillableRates.ts';
   import { generatePdfForPersonalRecord, generatePdfForSubmission } from '@/utils/pdfGenerator.ts';
   import type { BillableItemSummary } from '@/types/JobSubmissionResponseDTO.ts';
+  import { formatBillableLabel } from '@/utils/billableLabelFormatter.ts'
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter();
   const jobStore = useJobStore();
   const contractorStore = useContractorStore();
   const submittedJob = jobStore.submittedJob;
+
+  function goToJobPage () {
+    jobStore.resetJob();
+    router.push('/NewJob');
+  }
 
   const displayedItems = computed(() => {
     return submittedJob?.billableItemsSummary?.map((item: BillableItemSummary) => {
@@ -47,7 +55,7 @@
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
         billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: item.name,
+          type: formatBillableLabel(item.name),
           quantity: item.quantity,
           rate: item.rate,
           total: item.total,
@@ -74,7 +82,7 @@
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
         billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: item.name,
+          type: formatBillableLabel(item.name),
           quantity: item.quantity,
           rate: item.rate,
           total: item.total,
@@ -142,8 +150,7 @@
             <v-icon>mdi-tools</v-icon>
           </template>
           <v-list-item-title class="text-body-2">
-            {{ item.name }} - Qty: {{ item.quantity }} @ ${{ item.rate }} -
-            <strong>Total: ${{ item.total }} </strong>
+            {{ formatBillableLabel(item.name) }}
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -155,6 +162,14 @@
     </v-btn>
     <v-btn class="text-white text-h6 px-10 py-4 mb-4" color="orange-darken-2" size="large" @click="generatePersonalPdf">
       🧾 Generate Personal PDF
+    </v-btn>
+    <v-btn
+      block
+      class="mt-4"
+      color="green-darken-2"
+      @click="goToJobPage"
+    >
+      Log Another Job
     </v-btn>
   </v-container>
 </template>

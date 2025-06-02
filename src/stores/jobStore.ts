@@ -18,13 +18,13 @@ export const useJobStore = defineStore('job', {
       FIRE_CAULKING: 0,
       SCAFFOLDING: 0,
       HIGH_GARAGE_BULKHEAD: 0,
-      PINCH_POINT_STRIPS_SINGLE_FAMILY_HOME: false,
-      PINCH_POINT_STRIPS_DUPLEX: false,
-      POLY_ONLY_SMALL: false,
-      POLY_ONLY_LARGE: false,
+      PINCH_POINT_STRIPS_SINGLE_FAMILY_HOME: 0,
+      PINCH_POINT_STRIPS_DUPLEX: 0,
+      POLY_ONLY_SMALL: 0,
+      POLY_ONLY_LARGE: 0,
       FIRE_CAULKING_MATTAMY_HOUSE: 0,
       SCRAP_OUT: false,
-      SUITED_MECH_ROOM_RES_BAR: false,
+      SUITED_MECH_ROOM_RES_BAR: 0,
       STEEL_FRAMING_AND_BOARD: false,
       BOARD_ONLY: false,
       SECOND_MECH_ROOM: false,
@@ -92,6 +92,32 @@ export const useJobStore = defineStore('job', {
         // Clearing any data on an error. This is a temporary fix until I have a better error handling system.
         localStorage.removeItem('submittedJob');
         this.submittedJob = null;
+
+      }
+    },
+
+    resetJob () {
+      this.address = '';
+      this.date = '';
+      this.notes = '';
+      this.billables = {
+        INSULATION: 0,
+        DRYWALL: 0,
+        FIRE_CAULKING: 0,
+        SCAFFOLDING: 0,
+        HIGH_GARAGE_BULKHEAD: 0,
+        PINCH_POINT_STRIPS_SINGLE_FAMILY_HOME: 0,
+        PINCH_POINT_STRIPS_DUPLEX: 0,
+        POLY_ONLY_SMALL: 0,
+        POLY_ONLY_LARGE: 0,
+        FIRE_CAULKING_MATTAMY_HOUSE: 0,
+        SCRAP_OUT: false,
+        SUITED_MECH_ROOM_RES_BAR: 0,
+        STEEL_FRAMING_AND_BOARD: false,
+        BOARD_ONLY: false,
+        SECOND_MECH_ROOM: false,
+        FIRE_TAPING_MECH_ROOM_CEILING: false,
+        FIRE_TAPING_SECOND_MECH_ROOM: false,
 
       }
     },

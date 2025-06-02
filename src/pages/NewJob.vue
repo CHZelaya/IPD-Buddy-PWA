@@ -84,6 +84,21 @@
 
   }
 
+  const showConfirmDialog = ref(false);
+
+  function showDialog () {
+    showConfirmDialog.value = true;
+  }
+
+  function hideDialog () {
+    showConfirmDialog.value = false;
+  }
+
+  function confirmDialog () {
+    showConfirmDialog.value = false;
+    submitJob();
+  }
+
 </script>
 
 
@@ -167,10 +182,25 @@
         block
         class="mx-auto my-2 pa-2 pa-md-4"
         color="primary"
-        type="submit"
+        @click="showDialog"
       > Submit Work Order</v-btn>
     </v-form>
   </v-container>
+
+  <!-- Dialog Box-->
+  <v-dialog v-model="showConfirmDialog" max-width="500">
+    <v-card>
+      <v-card-title class="headline">Confirm Submission</v-card-title>
+      <v-card-text>
+        Are you sure you want to submit this job? Please ensure all details are correct.
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="grey" text @click="hideDialog">Cancel</v-btn>
+        <v-btn color="primary" text @click="confirmDialog">Confirm</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped lang="sass">
