@@ -5,8 +5,9 @@
   import { BILLABLE_RATES } from '@/utils/BillableRates.ts';
   import { generatePdfForPersonalRecord, generatePdfForSubmission } from '@/utils/pdfGenerator.ts';
   import type { BillableItemSummary } from '@/types/JobSubmissionResponseDTO.ts';
-  import { formatBillableLabel } from '@/utils/billableLabelFormatter.ts'
+  import { formatBillableLabel, getFormattedBillableItemsForPDF } from '@/utils/billableLabelFormatter.ts'
   import { useRouter } from 'vue-router';
+
 
   const router = useRouter();
   const jobStore = useJobStore();
@@ -38,10 +39,28 @@
   const address = firstItem?.jobAddress || 'Unknown';
   const notes = submittedJob?.notes || 'No additional notes.';
 
-  //Todo: Continue refactoring the SummaryPage.vue file to use the new JobSubmissionResponseDTO.ts file and work with the response to display the correct information.
+  const rawBillables = submittedJob?.billableItemsSummary.map(item => ({
+    type: item.name,
+    quantity: item.quantity,
+    rate: item.rate,
+    total: item.total,
+  }));
+
+  console.log('rawBillables', rawBillables);
+
+  const formatedBillables = rawBillables?.map(item => ({
+    type: formatBillableLabel(item.type),
+    quantity: item.quantity,
+    rate: item.rate,
+    total: item.total,
+  }));
+
+  console.log('formatedBillables', formatedBillables);
 
   function generateEmployerPdf () {
     if (!submittedJob) return;
+
+    //const formattedItems = getFormattedBillableItemsForPDF(submittedJob.billableItemsSummary);
 
     generatePdfForSubmission(
       {
@@ -54,12 +73,13 @@
           firstName: contractorStore.profile.firstName || 'No First name provided.',
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
-        billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: formatBillableLabel(item.name),
-          quantity: item.quantity,
-          rate: item.rate,
-          total: item.total,
-        })),
+        billableItemsSummary: formatedBillables,
+        // billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
+        //   type: formatBillableLabel(item.name),
+        //   quantity: item.quantity,
+        //   rate: item.rate,
+        //   total: item.total,
+        // })),
       },
       {
         grandTotalAmount: submittedJob.grandTotalAmount,
@@ -69,6 +89,8 @@
 
   function generatePersonalPdf () {
     if (!submittedJob) return;
+
+    const formattedItems = getFormattedBillableItemsForPDF(submittedJob.billableItemsSummary);
 
     generatePdfForPersonalRecord(
       {
@@ -81,12 +103,13 @@
           firstName: contractorStore.profile.firstName || 'No First name provided.',
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
-        billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: formatBillableLabel(item.name),
-          quantity: item.quantity,
-          rate: item.rate,
-          total: item.total,
-        })),
+        billableItemsSummary: formatedBillables,
+        // billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
+        //   type: formatBillableLabel(item.name),
+        //   quantity: item.quantity,
+        //   rate: item.rate,
+        //   total: item.total,
+        // })),
       },
       {
         grandTotalAmount: submittedJob.grandTotalAmount,

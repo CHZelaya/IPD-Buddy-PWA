@@ -1,6 +1,5 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { BILLABLE_RATES } from '@/utils/BillableRates'
 
 
 export function generatePdfForSubmission (details: any, summary: any) {
@@ -21,14 +20,11 @@ export function generatePdfForSubmission (details: any, summary: any) {
     startY: 60,
     head: [['Item', 'Qty', 'Rate', 'Total']],
     body: details.billableItemsSummary.map((item: any) => {
-      const rateInfo = BILLABLE_RATES[item.type] || { rate: 0, description: 'Unknown Item' }
-      const rate = rateInfo.rate
-      const total = rate * item.quantity
       return [
         item.type,
         item.quantity.toString(),
-        `$${rate.toFixed(2)}`,
-        `$${total.toFixed(2)}`,
+        `$${Number(item.rate).toFixed(2)}`,
+        `$${Number(item.total).toFixed(2)}`,
       ]
     }),
   })
@@ -68,14 +64,11 @@ export function generatePdfForPersonalRecord (details: any, summary: any) {
     startY: 70,
     head: [['Item', 'Qty', 'Rate', 'Total']],
     body: details.billableItemsSummary.map((item: any) => {
-      const rateInfo = BILLABLE_RATES[item.type] || { rate: 0, description: 'Unknown Item' }
-      const rate = rateInfo.rate
-      const total = rate * item.quantity
       return [
         item.type,
         item.quantity.toString(),
-        `$${rate.toFixed(2)}`,
-        `$${total.toFixed(2)}`,
+        `$${Number(item.rate).toFixed(2)}`,
+        `$${Number(item.total).toFixed(2)}`,
       ]
     }),
   })
