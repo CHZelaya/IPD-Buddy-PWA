@@ -2,7 +2,7 @@
 
 const BILLABLE_TYPE_MAP: Record<string, string> = {
   INSULATION: 'Insulation',
-  DRYWALL: 'Drynwall',
+  DRYWALL: 'Dry wall',
   FIRE_CAULKING: 'Fire Caulking',
   SCAFFOLDING: 'Scaffolding',
   HIGH_GARAGE_BULKHEAD: 'High Garage Bulkhead',
