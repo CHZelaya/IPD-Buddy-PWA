@@ -5,10 +5,18 @@
   import { BILLABLE_RATES } from '@/utils/BillableRates.ts';
   import { generatePdfForPersonalRecord, generatePdfForSubmission } from '@/utils/pdfGenerator.ts';
   import type { BillableItemSummary } from '@/types/JobSubmissionResponseDTO.ts';
+  import { formatBillableLabel } from '@/utils/billableLabelFormatter.ts'
+  import { useRouter } from 'vue-router';
 
+  const router = useRouter();
   const jobStore = useJobStore();
   const contractorStore = useContractorStore();
   const submittedJob = jobStore.submittedJob;
+
+  function goToJobPage () {
+    jobStore.resetJob();
+    router.push('/NewJob');
+  }
 
   const displayedItems = computed(() => {
     return submittedJob?.billableItemsSummary?.map((item: BillableItemSummary) => {
@@ -47,7 +55,7 @@
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
         billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: item.name,
+          type: formatBillableLabel(item.name),
           quantity: item.quantity,
           rate: item.rate,
           total: item.total,
@@ -74,7 +82,7 @@
           lastName: contractorStore.profile.lastName || 'No Last name provided.',
         },
         billableItemsSummary: submittedJob.billableItemsSummary.map(item => ({
-          type: item.name,
+          type: formatBillableLabel(item.name),
           quantity: item.quantity,
           rate: item.rate,
           total: item.total,
@@ -95,29 +103,73 @@
   <v-container class="fill-height d-flex flex-column justify-center align-center text-center" fluid>
     <v-img class="mb-4" max-height="200" src="@/assets/IPD-Buddy.png" />
 
-    <div class="mb-8 text-center">
+    <!--    <div class="mb-8 text-center">-->
+    <v-card class="pa-4 mb-6 elevation-2 rounded-xl">
+
+
       <div class="text-body-2 font-weight-light mb-n1">Job Submitted Successfully</div>
       <h1 class="text-h2 font-weight-bold mb-4">Here’s What You Logged</h1>
 
-      <div class="text-subtitle-1 font-weight-light mb-4">
-        <p><strong>Job Date:</strong> {{ date }}</p>
-        <p><strong>Address:</strong> {{ address }}</p>
-        <p><strong>Notes:</strong> {{ notes }}</p>
+      <!-- Job Details Section -->
+      <v-card-text>
+        <v-row dense>
+          <v-col cols="12" sm="6">
+            <v-icon class="mr-1" start>mdi-calendar</v-icon>
+            <p><strong>Job Date:</strong> {{ date }}</p>
+          </v-col>
 
-        <p><strong>Items:</strong></p>
-        <ul>
-          <li v-for="(item, index) in displayedItems" :key="index">
-            {{ item.name }} - Qty: {{ item.quantity }} @ ${{ item.rate }} - Total: ${{ item.total }}
-          </li>
-        </ul>
-      </div>
-    </div>
+          <v-col cols="12" sm="6">
+            <v-icon class="mr-1" start>mdi-map-marker</v-icon>
+            <p><strong>Address:</strong> {{ address }}</p>
+          </v-col>
+
+          <v-col cols="auto" sm="6">
+            <v-icon class="mr-1" start>mdi-note-text</v-icon>
+            <p><strong>Notes:</strong> {{ notes }}</p>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-divider class="my-3" />
+
+      <!-- Billables Section -->
+
+      <p class="mb-2">
+        <v-icon class="mr-1" start>mdi-package-variant</v-icon>
+        <strong>Items:</strong>
+      </p>
+
+      <v-list class="rounded-lg" density="compact">
+        <v-list-item
+          v-for="(item, index) in displayedItems"
+          :key="index"
+          class="bg-grey-lighten-4 mb-2 rounded"
+        >
+
+          <template #prepend>
+            <v-icon>mdi-tools</v-icon>
+          </template>
+          <v-list-item-title class="text-body-2">
+            {{ formatBillableLabel(item.name) }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-card>
+    <!--    </div>-->
 
     <v-btn class="text-white text-h6 px-10 py-4 mb-4" color="orange-darken-2" size="large" @click="generateEmployerPdf">
       📝 Generate Employer PDF
     </v-btn>
     <v-btn class="text-white text-h6 px-10 py-4 mb-4" color="orange-darken-2" size="large" @click="generatePersonalPdf">
       🧾 Generate Personal PDF
+    </v-btn>
+    <v-btn
+      block
+      class="mt-4"
+      color="green-darken-2"
+      @click="goToJobPage"
+    >
+      Log Another Job
     </v-btn>
   </v-container>
 </template>

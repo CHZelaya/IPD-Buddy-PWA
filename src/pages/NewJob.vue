@@ -38,23 +38,23 @@
 
   // Building the billable items and their components
   const billableItems = ref<BillableItem[]>([
-    { id: 'INSULATION', label: 'Insulation', description: '$30.00 per bag', model: ref(0), type: 'quantity' },
-    { id: 'DRYWALL', label: 'Drywall', description: '$20.00 per sheet', model: ref(0), type: 'quantity' },
+    { id: 'INSULATION', label: 'Insulation', description: '$30.00/bag', model: ref(0), type: 'quantity' },
+    { id: 'DRYWALL', label: 'Drywall', description: '$20.00/sheet', model: ref(0), type: 'quantity' },
     { id: 'FIRE_CAULKING', label: 'Fire Caulking', description: '$5.00 each (max 15 units)', model: ref(0), type: 'quantity', max: 15 },
-    { id: 'FIRE_CAULKING_MATTAMY_HOUSE', label: 'Fire Caulking', description: '$25.00 per floor (Mattamy)', model: ref(0), type: 'quantity' },
+    { id: 'FIRE_CAULKING_MATTAMY_HOUSE', label: 'Fire Caulking', description: '$25.00/floor (Mattamy)', model: ref(0), type: 'quantity' },
     { id: 'SCAFFOLDING', label: 'Scaffolding', description: '$25.00 per section', model: ref(0), type: 'quantity' },
     { id: 'HIGH_GARAGE_BULKHEAD', label: 'Garage Bulkhead', description: '$35.00 per bulkhead', model: ref(0), type: 'quantity' },
+    { id: 'PINCH_POINT_STRIPS_SINGLE_FAMILY_HOME', label: 'Pinch Point Strips', description: '$40.00 (Single family home)', model: ref(0), type: 'quantity' },
+    { id: 'PINCH_POINT_STRIPS_DUPLEX', label: 'Pinch Point Strips', description: '$50.00 (Duplex)', model: ref(0), type: 'quantity' },
+    { id: 'SUITED_MECH_ROOM_RES_BAR', label: 'Suited Mech Room', description: ' Res Bar Installation (Common Walls) $65.00/install ', model: ref(0), type: 'quantity' },
+    { id: 'POLY_ONLY_SMALL', label: 'Poly Only', description: ' $25.00 (small)', model: ref(0), type: 'quantity' },
+    { id: 'POLY_ONLY_LARGE', label: 'Poly Only', description: ' $50.00 (large)', model: ref(0), type: 'quantity' },
     { id: 'SCRAP_OUT', label: 'Scrap Out', description: '$25.00', model: ref(false), type: 'toggle' },
-    { id: 'PINCH_POINT_STRIPS_SINGLE_FAMILY_HOME', label: 'Pinch Point Strips', description: '$40.00 (Single family home)', model: ref(false), type: 'toggle' },
-    { id: 'PINCH_POINT_STRIPS_DUPLEX', label: 'Pinch Point Strips', description: '$50.00 (Duplex)', model: ref(false), type: 'toggle' },
-    { id: 'POLY_ONLY_SMALL', label: 'Poly Only', description: '$25.00 (small)', model: ref(false), type: 'toggle' },
-    { id: 'POLY_ONLY_LARGE', label: 'Poly Only', description: '$50.00 (large)', model: ref(false), type: 'toggle' },
-    { id: 'SUITED_MECH_ROOM_RES_BAR', label: 'Mech Room and Res-bar', description: '$65.00 per install', model: ref(false), type: 'toggle' },
-    { id: 'STEEL_FRAMING_AND_BOARD', label: 'Steel Framing and Board', description: '$500.00', model: ref(false), type: 'toggle' },
-    { id: 'BOARD_ONLY', label: 'Board Only', description: '$300.00', model: ref(false), type: 'toggle' },
-    { id: 'SECOND_MECH_ROOM', label: 'Second Mech Room', description: '$150.00', model: ref(false), type: 'toggle' },
+    { id: 'STEEL_FRAMING_AND_BOARD', label: 'Suited Mech Room Ceiling', description: 'Steel Framing and Board - $500.00', model: ref(false), type: 'toggle' },
+    { id: 'BOARD_ONLY', label: 'Suited Mech Room Ceiling', description: 'Board Only - $300.00', model: ref(false), type: 'toggle' },
+    { id: 'SECOND_MECH_ROOM', label: 'Second Suited Mech Room Ceiling', description: 'Second Mech Room - $150.00', model: ref(false), type: 'toggle' },
     { id: 'FIRE_TAPING_MECH_ROOM_CEILING', label: 'Fire Taping Mech Room Ceiling', description: '$225.00', model: ref(false), type: 'toggle' },
-    { id: 'FIRE_TAPING_SECOND_MECH_ROOM', label: 'Fire Taping Second Mech Room', description: '$100.00', model: ref(false), type: 'toggle' },
+    { id: 'FIRE_TAPING_SECOND_MECH_ROOM', label: 'Second Fire Taping Mech Room', description: '$100.00', model: ref(false), type: 'toggle' },
   ])
 
   //Job submission
@@ -66,13 +66,6 @@
     }
 
     console.log('Submitting Job')
-
-    // const payload = {
-    //   address:address.value,
-    //   date: jobDate.value,
-    //   notes: notes.value,
-    //   billables: prepareBillables(),
-    // }
 
     console.log('Submitting job`s billables')
     jobStore.syncBillablesFromComponentStore(billableItems.value as BillableItem[])
@@ -89,6 +82,21 @@
       });
 
 
+  }
+
+  const showConfirmDialog = ref(false);
+
+  function showDialog () {
+    showConfirmDialog.value = true;
+  }
+
+  function hideDialog () {
+    showConfirmDialog.value = false;
+  }
+
+  function confirmDialog () {
+    showConfirmDialog.value = false;
+    submitJob();
   }
 
 </script>
@@ -174,10 +182,25 @@
         block
         class="mx-auto my-2 pa-2 pa-md-4"
         color="primary"
-        type="submit"
+        @click="showDialog"
       > Submit Work Order</v-btn>
     </v-form>
   </v-container>
+
+  <!-- Dialog Box-->
+  <v-dialog v-model="showConfirmDialog" max-width="500">
+    <v-card>
+      <v-card-title class="headline">Confirm Submission</v-card-title>
+      <v-card-text>
+        Are you sure you want to submit this job? Please ensure all details are correct.
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="grey" text @click="hideDialog">Cancel</v-btn>
+        <v-btn color="primary" text @click="confirmDialog">Confirm</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped lang="sass">
