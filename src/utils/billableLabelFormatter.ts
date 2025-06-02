@@ -23,3 +23,17 @@ const BILLABLE_TYPE_MAP: Record<string, string> = {
 export function formatBillableLabel (billable: string) {
   return BILLABLE_TYPE_MAP[billable]
 }
+
+export function getFormattedBillableItemsForPDF (items: Array<any>){
+  return items.map(item => {
+    return {
+      type: formatBillableLabel(item.name), // Human-readable
+      quantity: item.quantity, // From backend, untouched
+      rate: `$${Number(item.rate).toFixed(2)}`, // Format just for display
+      total: `$${Number(item.total).toFixed(2)}`,
+    }
+
+  });
+
+
+}
