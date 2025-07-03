@@ -3,7 +3,6 @@ import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
 import type { JobSubmissionResponseDTO } from '@/types/JobSubmissionResponseDTO'
 
 import { submitJobToApi } from '@/services/apiService.ts';
-// import type { Ref } from 'vue';
 import type { BillableItem } from '@/types/BillableItems.ts';
 
 
