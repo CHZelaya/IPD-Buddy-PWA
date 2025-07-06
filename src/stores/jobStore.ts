@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
 import type { JobSubmissionResponseDTO } from '@/types/JobSubmissionResponseDTO'
 
-import { submitJobToApi } from '@/services/apiService.ts';
+import { submitJobToApi } from '@/services/apiService';
 import type { BillableItem } from '@/types/BillableItems.ts';
 
 

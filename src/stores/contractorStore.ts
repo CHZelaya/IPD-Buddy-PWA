@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { ContractorProfile } from '@/types/Contractor.ts'
-import { fallbackProfiles } from '@/constants/fallbackProfiles.ts'
+import { fallbackProfiles } from '@/constants/fallbackProfiles'
 
 
 export const useContractorStore = defineStore('contractor', {
