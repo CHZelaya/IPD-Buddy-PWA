@@ -1,41 +1,34 @@
 // stores/contractorJobsStore.js
-import { defineStore } from 'pinia'
-import type { PastJob } from '@/types/PastJob'
-import axios from 'axios'
+import { defineStore } from 'pinia';
+import type { JobSummary } from '@/types/JobSummary';
+import axios from 'axios';
 
-
-// type PastJob = {
-//   id: number
-//   title: string
-//   description: string
-//   date: string
-//   address: string
-// }
-
-
+// This store manages the state for contractor past jobs
+// It fetches past jobs from the API and provides actions to access them
+// The state includes an array of past jobs, a loading flag, and an error object
 export const useContractorJobsStore = defineStore('contractorJobs', {
   state: () => ({
-    pastJobs: [] as PastJob[],
+    jobSummaries: [] as JobSummary[],
     loading: false,
     error: null as null | Error,
   }),
   actions: {
-    async fetchPastJobs () {
-      this.loading = true
-      this.error = null
+    async fetchPastJobs() {
+      this.loading = true;
+      this.error = null;
       try {
-        const res = await axios.get('/api/v1/past-jobs')
-        this.pastJobs = res.data
+        const res = await axios.get('/api/v1/past-jobs');
+        this.jobSummaries = res.data;
       } catch (err) {
-        console.error(err)
+        console.error(err);
         if (err instanceof Error) {
-        this.error = err as Error}
-        else {
-          this.error = new Error('An unknown error occurred while fetching past jobs.')
+          this.error = err as Error;
+        } else {
+          this.error = new Error('An unknown error occurred while fetching past jobs.');
         }
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
   },
-})
+});
