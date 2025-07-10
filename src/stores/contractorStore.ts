@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
-import type { ContractorProfile } from '@/types/Contractor.ts'
-import { fallbackProfiles } from '@/constants/fallbackProfiles'
-
+import { defineStore } from 'pinia';
+import type { ContractorProfile } from '@/types/Contractor.ts';
+import { fallbackProfiles } from '@/constants/fallbackProfiles';
+import { fetchContractorProfile, updateContractorProfile } from '@/services/contractorService';
 
 export const useContractorStore = defineStore('contractor', {
   state: (): { profile: ContractorProfile } => ({
@@ -15,93 +15,86 @@ export const useContractorStore = defineStore('contractor', {
       savingsRate: 0,
     },
   }),
+
   actions: {
-    // GET contractor profile using FireBase-auth token
-    async fetchProfile (currentEmail: string){
-      console.log('Base URL:', `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1`);
+    /**========================================================================
+     * *                                INFO
+     * *  Fetches the contractor profile from the backend.
+     * *  currentEmail is used to apply a fallback profile if the fetch fails.
+     * *  If the profile is successfully fetched, it is stored in the state
+     *
+     *========================================================================**/
+    async fetchProfile(currentEmail: string) {
       const token = localStorage.getItem('jwt');
-      const url = `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/contractor/me`
-      try{
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+      if (!token) {
+        console.error('Failed to fetch contractor profile, token is missing');
+        return;
+      }
 
-
-        if (response.ok) {
-          this.profile = await response.json();
+      try {
+        const profile = await fetchContractorProfile(token);
+        if (profile) {
+          this.profile = profile;
+          localStorage.setItem('contractorProfile', JSON.stringify(profile));
         } else {
-          console.error('Failed to fetch contractor profile');
+          console.warn('Using cached profile due to fetch failure');
+          this.loadCachedProfile();
         }
       } catch (error) {
-        console.error('Networking error, applying fallback', error)
-        this.applyFallback(currentEmail);
+        console.error('Error fetching contractor profile:', error);
+        this.loadCachedProfile(); // Fallback to cached profile
       }
     },
 
-    // SAVE contractor profile to the backend/db
-    async saveProfile (email: string) {
-
+    /**========================================================================
+     * *                                INFO
+     * *  Loads the cached profile from local storage.
+     * *  If no cached profile is found, it applies a fallback profile based
+     * *  on the email.
+     *
+     *========================================================================**/
+    async saveProfile(email: string) {
       // Grabbing auth token and url
       const token = localStorage.getItem('jwt');
-      const url = `https://ipdbuddy-backend-v2-68c569e58877.herokuapp.com/api/v1/contractor/update`
+      if (!token) {
+        console.error('Failed to save contractor profile, token is missing');
+        return;
+      }
 
       //Building the payload based on current state
       const payload = {
-        firstName: this.profile.firstName,
-        lastName: this.profile.lastName,
+        ...this.profile,
         email,
-        phoneNumber: this.profile.phoneNumber,
-        taxRate: this.profile.taxRate,
-        savingsRate: this.profile.savingsRate,
       };
 
       try {
-        const response = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (response.ok){
-          const updated = await response.json();
-
-          //Save the updated profile to the store, to reflect real time data
+        const updated = await updateContractorProfile(token, payload);
+        if (updated) {
           this.profile = updated;
-
-          //Persisting to local storage for potential offline use
-          // still needs to be explored
           localStorage.setItem('contractorProfile', JSON.stringify(updated));
-
           console.log('Profile saved successfully:', updated);
-          return updated;
+        } else {
+          console.warn('Failed to update profile, applying fallback');
         }
-      } catch (error){
-        console.error('Error updateding contractor profile:', error);
+      } catch (error) {
+        console.error('Error saving contractor profile:', error);
       }
-
     },
 
-    applyFallback (email: string) {
-      const fallback = fallbackProfiles[email];
-      if (fallback) {
-        this.profile = {
-          id: -1,
-          firstName: fallback.name,
-          lastName: fallback.lastName,
-          email: fallback.email,
-          phoneNumber: fallback.phoneNumber,
-          taxRate: 0.2,
-          savingsRate: 0.2,
-        };
+    /**========================================================================
+     * *                                INFO
+     * *  Loads the cached profile from local storage.
+     * *  If no cached profile is found, it applies a fallback profile based
+     * *  on the email.
+     *
+     *========================================================================**/
+    loadCachedProfile() {
+      const cachedProfile = localStorage.getItem('contractorProfile');
+      if (cachedProfile) {
+        this.profile = JSON.parse(cachedProfile);
+        console.log('Loaded cached profile:', this.profile);
       } else {
-        console.warn('No fallback found for this email.');
+        console.warn('No cached profile found, applying fallback');
       }
     },
   },
