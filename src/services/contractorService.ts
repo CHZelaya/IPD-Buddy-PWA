@@ -12,7 +12,26 @@ import apiClient from './apiClient';
 export async function fetchContractorProfile(): Promise<ContractorProfile | null> {
   try {
     const { data } = await apiClient.get<ContractorProfile>('contractor/me');
-    return data;
+
+    const parsedProfile: ContractorProfile = {
+      id: data.id ?? 0,
+      firstName: data.firstName ?? '',
+      lastName: data.lastName ?? '',
+      email: data.email ?? '',
+      phoneNumber: data.phoneNumber ?? '',
+      taxRate: data.taxRate ?? 0,
+      savingsRate: data.savingsRate ?? 0,
+      earningsSummary: {
+        totalEarnings: data.earningsSummary?.totalEarnings ?? 0,
+        earnedThisWeek: data.earningsSummary?.earnedThisWeek ?? 0,
+        earnedThisMonth: data.earningsSummary?.earnedThisMonth ?? 0,
+        earnedThisYear: data.earningsSummary?.earnedThisYear ?? 0,
+        averageJobValue: data.earningsSummary?.averageJobValue ?? 0,
+        highestJobValue: data.earningsSummary?.highestJobValue ?? 0,
+      },
+    };
+
+    return parsedProfile;
   } catch (error) {
     console.error('Error fetching contractor profile:', error);
     return null;

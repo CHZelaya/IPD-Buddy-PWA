@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type { ContractorProfile } from '@/types/Contractor.ts';
 import { fetchContractorProfile, updateContractorProfile } from '@/services/contractorService';
 import { getFirebaseToken } from '@/services/authService';
+import type { EarningsSummary } from '@/types/EarningsSummary.ts';
 
 export const useContractorStore = defineStore('contractor', {
   state: (): { profile: ContractorProfile } => ({
@@ -13,6 +14,14 @@ export const useContractorStore = defineStore('contractor', {
       phoneNumber: '',
       taxRate: 0,
       savingsRate: 0,
+      earningsSummary: {
+        totalEarnings: 0,
+        earnedThisWeek: 0,
+        earnedThisMonth: 0,
+        earnedThisYear: 0,
+        averageJobValue: 0,
+        highestJobValue: 0,
+      },
     },
   }),
 
@@ -25,17 +34,12 @@ export const useContractorStore = defineStore('contractor', {
      *
      *========================================================================**/
     async fetchProfile(currentEmail: string) {
-      const token = await getFirebaseToken();
-      if (!token) {
-        console.error('Failed to fetch contractor profile, token is missing');
-        return;
-      }
-
       try {
-        const profile = await fetchContractorProfile(token);
+        const profile = await fetchContractorProfile();
         if (profile) {
           this.profile = profile;
           localStorage.setItem('contractorProfile', JSON.stringify(profile));
+          console.log('Contractor profile fetched successfully:', profile);
         } else {
           console.warn('Using cached profile due to fetch failure');
           this.loadCachedProfile();
@@ -54,13 +58,6 @@ export const useContractorStore = defineStore('contractor', {
      *
      *========================================================================**/
     async saveProfile(email: string) {
-      // Grabbing auth token and url
-      const token = await getFirebaseToken();
-      if (!token) {
-        console.error('Failed to save contractor profile, token is missing');
-        return;
-      }
-
       //Building the payload based on current state
       const payload = {
         ...this.profile,
@@ -68,7 +65,7 @@ export const useContractorStore = defineStore('contractor', {
       };
 
       try {
-        const updated = await updateContractorProfile(token, payload);
+        const updated = await updateContractorProfile(payload);
         if (updated) {
           this.profile = updated;
           localStorage.setItem('contractorProfile', JSON.stringify(updated));

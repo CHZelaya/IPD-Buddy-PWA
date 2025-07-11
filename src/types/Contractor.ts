@@ -1,3 +1,5 @@
+import type { EarningsSummary } from '@/types/EarningsSummary.ts';
+
 export interface ContractorProfile {
   id: number;
   firstName: string;
@@ -6,4 +8,5 @@ export interface ContractorProfile {
   phoneNumber: string;
   taxRate: number;
   savingsRate: number;
+  earningsSummary: EarningsSummary; // Updated to use EarningsSummary type
 }
