@@ -114,7 +114,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useContractorJobsStore } from '@/stores/contractorJobStore';
+import { useContractorJobsStore } from '@/stores/contractorJobsStore';
 
 const jobsStore = useContractorJobsStore();
 const { fetchPastJobs } = jobsStore;

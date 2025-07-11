@@ -1,33 +1,17 @@
 import type { ContractorProfile } from '@/types/Contractor';
 import { getApiUrl } from '@/config/apiConfig';
+import { getFirebaseToken } from './authService';
+import { log } from '@/utils/logger';
+import apiClient from './apiClient';
 
 /**
  * Fetches the contractor profile from the API.
- * @param {string} token - The JWT token for authentication.
  * @returns {Promise<ContractorProfile | null>} - The contractor profile or null if not found.
  */
-export async function fetchContractorProfile(token: string): Promise<ContractorProfile | null> {
-  if (!token) {
-    console.error('Failed to fetch contractor profile, token is missing');
-    return null;
-  }
 
+export async function fetchContractorProfile(): Promise<ContractorProfile | null> {
   try {
-    const response = await fetch(getApiUrl('contractor/me'), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch contractor profile', response.statusText);
-      return null;
-    }
-
-    const data: ContractorProfile = await response.json();
-    console.log('Contractor profile fetched successfully:', data);
+    const { data } = await apiClient.get<ContractorProfile>('contractor/me');
     return data;
   } catch (error) {
     console.error('Error fetching contractor profile:', error);
@@ -37,36 +21,15 @@ export async function fetchContractorProfile(token: string): Promise<ContractorP
 
 /**
  * Updates the contractor profile in the API.
- * @param {string} token - The JWT token for authentication.
+
  * @param {ContractorProfile} payload - The contractor profile data to update.
  * @returns {Promise<ContractorProfile | null>} - The updated contractor profile or null if the update failed.
  */
 export async function updateContractorProfile(
-  token: string,
   payload: ContractorProfile
 ): Promise<ContractorProfile | null> {
-  if (!token) {
-    console.error('Failed to update contractor profile, token is missing');
-    return null;
-  }
-
   try {
-    const response = await fetch(getApiUrl('contractor/update-profile'), {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      console.error('Failed to update contractor profile', response.statusText);
-      return null;
-    }
-
-    const data: ContractorProfile = await response.json();
-    console.log('Contractor profile updated successfully:', data);
+    const { data } = await apiClient.put<ContractorProfile>('contractor/me', payload);
     return data;
   } catch (error) {
     console.error('Error updating contractor profile:', error);

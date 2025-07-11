@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { ContractorProfile } from '@/types/Contractor.ts';
-import { fallbackProfiles } from '@/constants/fallbackProfiles';
 import { fetchContractorProfile, updateContractorProfile } from '@/services/contractorService';
+import { getFirebaseToken } from '@/services/authService';
 
 export const useContractorStore = defineStore('contractor', {
   state: (): { profile: ContractorProfile } => ({
@@ -25,7 +25,7 @@ export const useContractorStore = defineStore('contractor', {
      *
      *========================================================================**/
     async fetchProfile(currentEmail: string) {
-      const token = localStorage.getItem('jwt');
+      const token = await getFirebaseToken();
       if (!token) {
         console.error('Failed to fetch contractor profile, token is missing');
         return;
@@ -55,7 +55,7 @@ export const useContractorStore = defineStore('contractor', {
      *========================================================================**/
     async saveProfile(email: string) {
       // Grabbing auth token and url
-      const token = localStorage.getItem('jwt');
+      const token = await getFirebaseToken();
       if (!token) {
         console.error('Failed to save contractor profile, token is missing');
         return;
@@ -99,5 +99,3 @@ export const useContractorStore = defineStore('contractor', {
     },
   },
 });
-
-// const url = `http://localhost:8080/api/v1/contractor/me` //! Dev mode
