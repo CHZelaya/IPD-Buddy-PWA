@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
-import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
-import type { JobSubmissionResponseDTO } from '@/types/JobSubmissionResponseDTO';
+import type { JobSubmissionPayload } from '../types';
+import type { JobSubmissionResponseDTO, BillableItem } from '@/types';
 
 import { submitJobToApi } from '@/services/jobService';
-import type { BillableItem } from '@/types/BillableItems.ts';
 
 export const useJobStore = defineStore('job', {
   state: () => ({

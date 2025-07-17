@@ -1,6 +1,6 @@
 // stores/contractorJobsStore.js
 import { defineStore } from 'pinia';
-import type { JobSummary } from '@/types/JobSummary';
+import type { JobSummary } from '@/types';
 import { fetchPastJobsFromApi } from '@/services/jobService';
 import { getApiUrl } from '@/config/apiConfig';
 import { log, warn, error } from '@/utils/logger';

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { ContractorProfile, UpdateContractorProfilePayload } from '@/types/Contractor.ts';
+import type { ContractorProfile, UpdateContractorProfilePayload } from '@/types';
 import { fetchContractorProfile, updateContractorProfile } from '@/services/contractorService';
 
 export const useContractorStore = defineStore('contractor', {
