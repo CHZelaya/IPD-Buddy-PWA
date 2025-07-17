@@ -1,5 +1,5 @@
 <template>
-  <v-container class="py-6" style="max-width: 1200px; margin: auto">
+  <v-container fluid class="d-flex flex-column flex-grow-1" style="max-width: 1200px; margin: auto">
     <v-container fluid>
       <v-row dense class="mb-4">
         <v-col cols="12" md="6">

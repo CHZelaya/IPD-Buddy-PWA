@@ -79,7 +79,7 @@ import { useContractorStore } from '@/stores/contractorStore';
 import { computed } from 'vue';
 import { BILLABLE_RATES } from '@/utils/BillableRates.ts';
 import { generatePdfForPersonalRecord, generatePdfForSubmission } from '@/utils/pdfGenerator.ts';
-import type { BillableItemSummary } from '@/types/JobSubmissionResponseDTO.ts';
+import type { BillableItemSummary } from '@/types';
 import {
   formatBillableLabel,
   getFormattedBillableItemsForPDF,
