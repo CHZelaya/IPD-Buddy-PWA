@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
-import type { ContractorProfile } from '@/types/Contractor.ts';
+import type { ContractorProfile, UpdateContractorProfilePayload } from '@/types/Contractor.ts';
 import { fetchContractorProfile, updateContractorProfile } from '@/services/contractorService';
-import { getFirebaseToken } from '@/services/authService';
-import type { EarningsSummary } from '@/types/EarningsSummary.ts';
 
 export const useContractorStore = defineStore('contractor', {
   state: (): { profile: ContractorProfile } => ({
@@ -52,15 +50,28 @@ export const useContractorStore = defineStore('contractor', {
 
     /**========================================================================
      * *                                INFO
-     * *  Loads the cached profile from local storage.
-     * *  If no cached profile is found, it applies a fallback profile based
-     * *  on the email.
+     * *  Saves the contractor profile to the backend.
+     * *  The email is used to update the profile.
+     * *  If the save is successful, the profile is updated in the state
+     * *  and cached in local storage.
+     * *  If the save fails, an error is logged.
      *
      *========================================================================**/
     async saveProfile(email: string) {
       //Building the payload based on current state
-      const payload = {
-        ...this.profile,
+      const { id, firstName, lastName, phoneNumber, taxRate, savingsRate } = this.profile;
+
+      if (!email) {
+        console.error('Email is required to save the profile');
+        return;
+      }
+      const payload: UpdateContractorProfilePayload = {
+        id,
+        firstName,
+        lastName,
+        phoneNumber,
+        taxRate,
+        savingsRate,
         email,
       };
 
@@ -70,8 +81,6 @@ export const useContractorStore = defineStore('contractor', {
           this.profile = updated;
           localStorage.setItem('contractorProfile', JSON.stringify(updated));
           console.log('Profile saved successfully:', updated);
-        } else {
-          console.warn('Failed to update profile, applying fallback');
         }
       } catch (error) {
         console.error('Error saving contractor profile:', error);

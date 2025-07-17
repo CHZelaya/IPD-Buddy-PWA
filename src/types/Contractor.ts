@@ -10,3 +10,13 @@ export interface ContractorProfile {
   savingsRate: number;
   earningsSummary: EarningsSummary; // Updated to use EarningsSummary type
 }
+
+export interface UpdateContractorProfilePayload {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  taxRate: number;
+  savingsRate: number;
+}

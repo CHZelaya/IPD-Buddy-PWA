@@ -1,4 +1,4 @@
-import type { ContractorProfile } from '@/types/Contractor';
+import type { ContractorProfile, UpdateContractorProfilePayload } from '@/types/Contractor';
 import { getApiUrl } from '@/config/apiConfig';
 import { getFirebaseToken } from './authService';
 import { log } from '@/utils/logger';
@@ -45,10 +45,10 @@ export async function fetchContractorProfile(): Promise<ContractorProfile | null
  * @returns {Promise<ContractorProfile | null>} - The updated contractor profile or null if the update failed.
  */
 export async function updateContractorProfile(
-  payload: ContractorProfile
+  payload: UpdateContractorProfilePayload
 ): Promise<ContractorProfile | null> {
   try {
-    const { data } = await apiClient.put<ContractorProfile>('contractor/me', payload);
+    const { data } = await apiClient.put<ContractorProfile>('contractor/update-profile', payload);
     return data;
   } catch (error) {
     console.error('Error updating contractor profile:', error);
