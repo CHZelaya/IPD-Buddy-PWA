@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <router-view />
+    <v-main class="pa-0">
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 
-<script lang="ts" setup>
-  //
-</script>
+<script lang="ts" setup></script>

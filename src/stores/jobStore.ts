@@ -1,11 +1,8 @@
 import { defineStore } from 'pinia';
-import type { JobSubmissionPayload } from '../types/JobSubmissionPayload';
-import type { JobSubmissionResponseDTO } from '@/types/JobSubmissionResponseDTO'
+import type { JobSubmissionPayload } from '../types';
+import type { JobSubmissionResponseDTO, BillableItem } from '@/types';
 
-import { submitJobToApi } from '@/services/apiService.ts';
-// import type { Ref } from 'vue';
-import type { BillableItem } from '@/types/BillableItems.ts';
-
+import { submitJobToApi } from '@/services/jobService';
 
 export const useJobStore = defineStore('job', {
   state: () => ({
@@ -35,9 +32,8 @@ export const useJobStore = defineStore('job', {
     submittedJob: null as JobSubmissionResponseDTO | null,
   }),
 
-
   actions: {
-    syncBillablesFromComponentStore (billableArray: BillableItem[]) {
+    syncBillablesFromComponentStore(billableArray: BillableItem[]) {
       billableArray.forEach((item: BillableItem) => {
         const rawValue = unref(item.model);
 
@@ -52,23 +48,25 @@ export const useJobStore = defineStore('job', {
       console.log('Synced billables:', this.billables);
     },
 
-
-    prepareBillables () {
-      return Object.entries(this.billables).map(([key, value]) => {
-        if (typeof value === 'boolean'){
-          // Returns true or null, null values will be filtered out
-          return value ? { billableType: key, quantity: 1 } : null;
-        } else {
-          const parsed = Number(value);
-          // Returns the parsed number or null, null values will be filtered out
-          return parsed > 0 ? { billableType: key, quantity: parsed } : null;
-        }
-      })
-        // Filtering out the null values
-        .filter(item => item !== null);
+    prepareBillables() {
+      return (
+        Object.entries(this.billables)
+          .map(([key, value]) => {
+            if (typeof value === 'boolean') {
+              // Returns true or null, null values will be filtered out
+              return value ? { billableType: key, quantity: 1 } : null;
+            } else {
+              const parsed = Number(value);
+              // Returns the parsed number or null, null values will be filtered out
+              return parsed > 0 ? { billableType: key, quantity: parsed } : null;
+            }
+          })
+          // Filtering out the null values
+          .filter((item) => item !== null)
+      );
     },
 
-    async submitJob () {
+    async submitJob() {
       const billableItemsSummary = this.prepareBillables();
 
       const payload: JobSubmissionPayload = {
@@ -78,25 +76,21 @@ export const useJobStore = defineStore('job', {
         billables: billableItemsSummary,
       };
 
-
       try {
         const result = await submitJobToApi(payload); // Backend call
         console.log('Job submitted successfully', result);
         this.submittedJob = result; //  Store server's processed response (includes totals, IDs, etc.)
         localStorage.setItem('submittedJob', JSON.stringify(result));
         return result;
-
       } catch (error) {
-
-        console.error('Failed to submit job', error)
+        console.error('Failed to submit job', error);
         // Clearing any data on an error. This is a temporary fix until I have a better error handling system.
         localStorage.removeItem('submittedJob');
         this.submittedJob = null;
-
       }
     },
 
-    resetJob () {
+    resetJob() {
       this.address = '';
       this.date = '';
       this.notes = '';
@@ -118,9 +112,7 @@ export const useJobStore = defineStore('job', {
         SECOND_MECH_ROOM: false,
         FIRE_TAPING_MECH_ROOM_CEILING: false,
         FIRE_TAPING_SECOND_MECH_ROOM: false,
-
-      }
+      };
     },
-
   },
-})
+});

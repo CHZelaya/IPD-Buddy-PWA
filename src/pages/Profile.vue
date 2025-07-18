@@ -2,8 +2,12 @@
   import { useContractorStore } from '@/stores/contractorStore';
   import { onMounted } from 'vue';
   import { computed } from 'vue';
+  import { ref } from 'vue';
 
   const contractorStore = useContractorStore();
+  const showSnackbar = ref(false);
+  const snackbarText = ref('');
+  const snackbarColor = ref('green'); //default color
 
   const taxRatePercent = computed({
     get: () => contractorStore.profile.taxRate * 100,
@@ -16,13 +20,29 @@
   });
 
   onMounted(() => {
-    contractorStore.fetchProfile();
+    contractorStore.fetchProfile(contractorStore.profile.email);
   });
 
 
-  // function saveProfile () {
-  //   console.log('Saving profile...')
-  // }
+  const handleSave = async () => {
+    try{
+      const result = await contractorStore.saveProfile(contractorStore.profile.email);
+      console.log('Saved contractor profile:', result);
+      // Snackbar on success
+      snackbarText.value = 'Profile Updated Successfully!';
+      snackbarColor.value = 'green';
+      showSnackbar.value = true;
+
+    } catch (err) {
+      console.error('Save failed:', err);
+      //Snackbar on failure
+      snackbarText.value = 'Failed to update profile, please try again later'
+      snackbarColor.value = 'red';
+      showSnackbar.value = true;
+
+    }
+  }
+
 </script>
 
 <template>
@@ -61,11 +81,23 @@
           class="my-2"
           color="primary"
           size="large"
+          @click="handleSave"
         >
           Save Changes
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    <!--    Snack Bar-->
+    <v-snackbar
+      v-model="showSnackbar"
+      :color="snackbarColor"
+      location="top"
+      :timeout="3000"
+    >
+      {{ snackbarText }}
+    </v-snackbar>
+
   </v-container>
 </template>
 

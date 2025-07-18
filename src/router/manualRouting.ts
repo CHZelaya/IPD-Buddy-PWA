@@ -27,17 +27,40 @@ const routes = [
     path: '/',
     component: DefaultLayout,
     children: [
-      { path: 'newJob', name: 'new-job', component: NewJob },
-      { path: 'pastJobs', name: 'past-jobs', component: PastJobs },
-      { path: 'profile', name: 'profile', component: Profile },
-      { path: 'dashboard', name: 'dashboard', component: Dashboard },
-      { path: 'job/success', name: 'success', component: SummaryPage },
-      { path: '**', redirect: '/' },
+      { path: 'newJob', name: 'new-job', component: NewJob, meta: { requiresAuth: true } },
+      { path: 'pastJobs', name: 'past-jobs', component: PastJobs, meta: { requiresAuth: true } },
+      { path: 'profile', name: 'profile', component: Profile, meta: { requiresAuth: true } },
+      { path: 'dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
+      {
+        path: 'job/success',
+        name: 'success',
+        component: SummaryPage,
+        meta: { requiresAuth: true },
+      },
+      { path: '/:catchAll(.*)', redirect: '/' },
     ],
   },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+// Navigation Guard
+
+import { getAuth } from 'firebase/auth';
+
+router.beforeEach((to, from, next) => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+
+  if (requiresAuth && !currentUser) {
+    next('/');
+  } else {
+    next();
+  }
+});
+
+export default router;

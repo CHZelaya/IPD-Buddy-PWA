@@ -1,11 +1,7 @@
 <template>
   <v-container class="fill-height d-flex flex-column justify-center align-center text-center" fluid>
     <div>
-      <v-img
-        class="mb-4"
-        max-height="200"
-        src="@/assets/IPD-Buddy.png"
-      />
+      <v-img class="mb-4" max-height="200" src="@/assets/IPD-Buddy.png" />
 
       <div class="mb-8 text-center">
         <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
@@ -45,38 +41,38 @@
       </div>
     </div>
   </v-container>
+  <AppFooter />
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
-  import { auth } from '@/services/firebase-init'
-  import { signInWithEmailAndPassword } from 'firebase/auth'
-  import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { auth } from '@/services/firebase-init';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import AppFooter from '@/components/AppFooter.vue';
 
+const email = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const showPassword = ref(false);
+const router = useRouter();
 
-  const email = ref('')
-  const password = ref('')
-  const errorMessage = ref('')
-  const showPassword = ref(false)
-  const router = useRouter()
+const login = async () => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
+    const user = userCredential.user;
 
-  const login = async () => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
-      const user = userCredential.user
+    // Grabbing the token from Firebase
+    const token = await user.getIdToken();
 
-
-      // Grabbing the token from Firebase
-      const token = await user.getIdToken()
-
-      //Storing it in localStorage
-      localStorage.setItem('jwt', token)
-      console.log('Logged in successfully!')
-      router.push('/dashboard');
-    } catch (error: any) {
-      errorMessage.value = error.message
-    }
+    //Storing it in localStorage
+    localStorage.setItem('jwt', token);
+    console.log('Logged in successfully!');
+    router.push('/dashboard');
+  } catch (error: any) {
+    errorMessage.value = error.message;
   }
+};
 </script>
 
 <style scoped>
