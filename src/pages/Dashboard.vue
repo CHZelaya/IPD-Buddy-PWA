@@ -52,7 +52,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.totalEarnings"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,
@@ -70,7 +70,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.highestJobValue"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,
@@ -88,7 +88,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.earnedThisYear"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,
@@ -106,7 +106,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.earnedThisMonth"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,
@@ -125,7 +125,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.earnedThisWeek"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,
@@ -144,7 +144,7 @@
                     :decimal-places="2"
                     :start-val="0"
                     :end-val="contractorStore.profile.earningsSummary.averageJobValue"
-                    :duration="2.5"
+                    :duration="1.5"
                     :options="{
                       prefix: '$',
                       useEasing: true,

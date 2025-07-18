@@ -6,11 +6,6 @@
       <span>Dashboard</span>
     </v-btn>
 
-    <v-btn value="profile" @click="navigateTo('profile')">
-      <v-icon>mdi-account</v-icon>
-
-      <span>Profile</span>
-    </v-btn>
     <v-btn value="newJob" @click="navigateTo('newJob')">
       <v-icon>mdi-plus-box</v-icon>
       <span>New Job</span>
@@ -19,6 +14,12 @@
     <v-btn value="pastJobs" @click="navigateTo('pastJobs')">
       <v-icon>mdi-history</v-icon>
       <span>Past Jobs</span>
+    </v-btn>
+
+    <v-btn value="profile" @click="navigateTo('profile')">
+      <v-icon>mdi-account</v-icon>
+
+      <span>Profile</span>
     </v-btn>
   </v-bottom-navigation>
 </template>

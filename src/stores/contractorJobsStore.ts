@@ -2,9 +2,7 @@
 import { defineStore } from 'pinia';
 import type { JobSummary } from '@/types';
 import { fetchPastJobsFromApi } from '@/services/jobService';
-import { getApiUrl } from '@/config/apiConfig';
 import { log, warn, error } from '@/utils/logger';
-import { getFirebaseToken } from '@/services/authService';
 
 // This store manages the state for contractor past jobs
 // It fetches past jobs from the API and provides actions to access them

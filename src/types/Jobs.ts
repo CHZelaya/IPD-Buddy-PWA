@@ -31,9 +31,9 @@ export interface JobSubmissionResponseDTO {
 // Todo: Align the type definition with the API response structure
 export interface JobSummary {
   jobId: number;
-  taxAmount: string;
-  savingsAmount: string;
-  grandTotalAmount: string;
+  taxAmount: number;
+  savingsAmount: number;
+  grandTotalAmount: number;
   date: string; // ISO date string
   address: string;
 }

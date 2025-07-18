@@ -1,75 +1,69 @@
 <template>
-  <v-container class="fill-height d-flex flex-column justify-center align-center text-center" fluid>
-    <v-img class="mb-4" max-height="200" src="@/assets/IPD-Buddy.png" />
+  <v-container class="py-6 px-4" fluid>
+    <v-row justify="center" class="mb-6">
+      <v-col cols="12" md="8">
+        <!-- <v-img class="mx-auto mb-4" max-width="200" src="@/assets/IPD-Buddy.png" /> -->
+        <v-card class="pa-6 elevation-2 rounded-xl text-center">
+          <div class="text-subtitle-2 text-grey-darken-1 mb-1">Job Submitted Successfully</div>
+          <h2 class="text-h4 font-weight-bold mb-6">Here’s What You Logged</h2>
 
-    <!--    <div class="mb-8 text-center">-->
-    <v-card class="pa-4 mb-6 elevation-2 rounded-xl">
-      <div class="text-body-2 font-weight-light mb-n1">Job Submitted Successfully</div>
-      <h1 class="text-h2 font-weight-bold mb-4">Here’s What You Logged</h1>
+          <!-- Job Details -->
+          <v-row dense>
+            <v-col cols="12" sm="6">
+              <v-icon start class="mr-1">mdi-calendar</v-icon>
+              <strong>Job Date:</strong> {{ date }}
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-icon start class="mr-1">mdi-map-marker</v-icon>
+              <strong>Address:</strong> {{ address }}
+            </v-col>
+            <v-col cols="12">
+              <v-icon start class="mr-1">mdi-note-text</v-icon>
+              <strong>Notes:</strong> {{ notes }}
+            </v-col>
+          </v-row>
 
-      <!-- Job Details Section -->
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" sm="6">
-            <v-icon class="mr-1" start>mdi-calendar</v-icon>
-            <p><strong>Job Date:</strong> {{ date }}</p>
-          </v-col>
+          <v-divider class="my-4" />
 
-          <v-col cols="12" sm="6">
-            <v-icon class="mr-1" start>mdi-map-marker</v-icon>
-            <p><strong>Address:</strong> {{ address }}</p>
-          </v-col>
+          <!-- Items -->
+          <div class="text-left mb-3">
+            <v-icon class="mr-1" start>mdi-package-variant</v-icon>
+            <strong>Items:</strong>
+          </div>
+          <v-list class="rounded-lg elevation-1">
+            <v-list-item v-for="(item, index) in displayedItems" :key="index" class="mb-2">
+              <template #prepend>
+                <v-icon color="orange-darken-2">mdi-tools</v-icon>
+              </template>
+              <v-list-item-title>{{ formatBillableLabel(item.name) }}</v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.quantity }} × ${{ item.rate.toFixed(2) }} = ${{ item.total.toFixed(2) }}
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
 
-          <v-col cols="auto" sm="6">
-            <v-icon class="mr-1" start>mdi-note-text</v-icon>
-            <p><strong>Notes:</strong> {{ notes }}</p>
-          </v-col>
-        </v-row>
-      </v-card-text>
+          <v-divider class="my-4" />
 
-      <v-divider class="my-3" />
+          <!-- Buttons -->
+          <v-row dense class="mt-2 mb-4">
+            <v-col cols="12" sm="6">
+              <v-btn block color="orange-darken-2" class="text-white" @click="generateEmployerPdf">
+                📝 Generate Employer PDF
+              </v-btn>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <v-btn block color="orange-darken-2" class="text-white" @click="generatePersonalPdf">
+                🧾 Generate Personal PDF
+              </v-btn>
+            </v-col>
+          </v-row>
 
-      <!-- Billables Section -->
-
-      <p class="mb-2">
-        <v-icon class="mr-1" start>mdi-package-variant</v-icon>
-        <strong>Items:</strong>
-      </p>
-
-      <v-list class="rounded-lg" density="compact">
-        <v-list-item
-          v-for="(item, index) in displayedItems"
-          :key="index"
-          class="bg-grey-lighten-4 mb-2 rounded"
-        >
-          <template #prepend>
-            <v-icon>mdi-tools</v-icon>
-          </template>
-          <v-list-item-title class="text-body-2">
-            {{ formatBillableLabel(item.name) }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-card>
-    <!--    </div>-->
-
-    <v-btn
-      class="text-white text-h6 px-10 py-4 mb-4"
-      color="orange-darken-2"
-      size="large"
-      @click="generateEmployerPdf"
-    >
-      📝 Generate Employer PDF
-    </v-btn>
-    <v-btn
-      class="text-white text-h6 px-10 py-4 mb-4"
-      color="orange-darken-2"
-      size="large"
-      @click="generatePersonalPdf"
-    >
-      🧾 Generate Personal PDF
-    </v-btn>
-    <v-btn block class="mt-4" color="green-darken-2" @click="goToJobPage"> Log Another Job </v-btn>
+          <v-btn block color="green-darken-2" class="text-white" @click="goToJobPage">
+            ➕ Log Another Job
+          </v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
