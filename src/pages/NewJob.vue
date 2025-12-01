@@ -135,10 +135,9 @@ const billableItems = ref<BillableItem[]>([
   {
     id: 'FIRE_CAULKING',
     label: 'Fire Caulking',
-    description: '$5.00 each (max 15 units)',
+    description: '$5.00 each',
     model: ref(0),
     type: 'quantity',
-    max: 15,
   },
   {
     id: 'FIRE_CAULKING_MATTAMY_HOUSE',
@@ -196,7 +195,7 @@ const billableItems = ref<BillableItem[]>([
     model: ref(0),
     type: 'quantity',
   },
-  { id: 'SCRAP_OUT', label: 'Scrap Out', description: '$25.00', model: ref(false), type: 'toggle' },
+  { id: 'SCRAP_OUT', label: 'Scrap Out', description: '$25.00', model: ref(0), type: 'quantity' },
   {
     id: 'STEEL_FRAMING_AND_BOARD',
     label: 'Suited Mech Room Ceiling',
