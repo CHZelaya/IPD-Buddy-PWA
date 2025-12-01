@@ -130,7 +130,7 @@
                 Savings: {{ formatCurrency(job.savingsAmount) }}
               </div>
             </v-card-text>
-            <!-- 
+            <!--  To be implemented - maybe?
             <v-card-actions>
               <v-btn color="primary" variant="text" @click="viewDetails(job)">View Details</v-btn>
               <v-btn color="success" variant="text" @click="generatePDF(job)">Download PDF</v-btn>
@@ -204,37 +204,11 @@ const PayPeriodPdf = () => {
     jobs: jobEntries,
     totals: summaryTotals.value,
     payPeriod: {
-      start: startDate.value,
-      end: endDate.value,
+      start: startDate.value ?? '',
+      end: endDate.value ?? '',
     },
   });
 };
-
-// //Function to generate the Pay Period PDF
-// const generatePayPeriodPdf = () => {
-//   if (!filteredJobs.value.length) return;
-
-//   const jobEntries = filteredJobs.value.map((job) => ({
-//     date: job.date,
-//     address: job.address,
-//     total: job.grandTotalAmount,
-//     tax: job.taxAmount,
-//     savings: job.savingsAmount,
-//   }));
-
-//   generatePdfForPayPeriod({
-//     contractor: {
-//       firstName: contractorStore.profile.firstName,
-//       lastName: contractorStore.profile.lastName,
-//     },
-//     jobs: jobEntries,
-//     totals: summaryTotals.value,
-//     payPeriod: {
-//       start: startDate.value,
-//       end: endDate.value,
-//     },
-//   });
-// };
 
 onMounted(() => {
   fetchPastJobs();
